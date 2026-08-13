@@ -1,0 +1,13 @@
+"use client";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
+import { LockKeyhole, Mail } from "lucide-react";
+import { supabase } from "../../lib/supabase";
+
+function LoginForm(){
+ const router=useRouter();const search=useSearchParams();const [email,setEmail]=useState("");const [password,setPassword]=useState("");const [loading,setLoading]=useState(false);const [error,setError]=useState("");
+ async function submit(e:React.FormEvent){e.preventDefault();setLoading(true);setError("");const {error}=await supabase.auth.signInWithPassword({email,password});setLoading(false);if(error){setError(error.message);return}const next=search.get("next");router.replace(next&&next.startsWith("/")?next:"/portal")}
+ return <main className="grid min-h-screen place-items-center bg-[#07101f] p-5"><div className="w-full max-w-md rounded-3xl border border-white/10 bg-white p-8 shadow-2xl"><Image src="/logo.png" alt="ProgramFiles" width={230} height={70} className="mx-auto h-14 w-auto object-contain" priority/><div className="mt-7 text-center"><h1 className="text-2xl font-black text-slate-900">Ingresar a ProgramFiles</h1><p className="mt-2 text-sm text-slate-500">El sistema te llevará automáticamente a tu panel.</p></div><form onSubmit={submit} className="mt-7 space-y-4"><div><label className="mb-2 block text-xs font-bold uppercase text-slate-500">Email</label><div className="relative"><Mail className="absolute left-3 top-3 text-slate-400" size={18}/><input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="email" className="w-full rounded-xl border border-slate-200 py-3 pl-10 pr-4 text-sm outline-none focus:border-sky-400"/></div></div><div><label className="mb-2 block text-xs font-bold uppercase text-slate-500">Contraseña</label><div className="relative"><LockKeyhole className="absolute left-3 top-3 text-slate-400" size={18}/><input type="password" value={password} onChange={e=>setPassword(e.target.value)} required autoComplete="current-password" className="w-full rounded-xl border border-slate-200 py-3 pl-10 pr-4 text-sm outline-none focus:border-sky-400"/></div></div>{error&&<div className="rounded-xl bg-red-50 p-3 text-xs font-semibold text-red-600">{error}</div>}<button disabled={loading} className="w-full rounded-xl bg-sky-500 py-3 text-sm font-bold text-white shadow-lg shadow-sky-500/20 hover:bg-sky-600 disabled:opacity-50">{loading?"Ingresando...":"Iniciar sesión"}</button></form></div></main>
+}
+export default function Login(){return <Suspense fallback={<main className="grid min-h-screen place-items-center bg-[#07101f] text-white">Cargando...</main>}><LoginForm/></Suspense>}

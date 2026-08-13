@@ -1,0 +1,3 @@
+export default function Toggle({ checked, onChange, label, description }: { checked:boolean; onChange:()=>void; label:string; description?:string }) {
+  return <button type="button" onClick={onChange} className={`flex w-full items-center justify-between rounded-xl border p-4 text-left transition ${checked?"border-sky-300 bg-sky-50":"border-slate-200 bg-white hover:bg-slate-50"}`}><div><div className="text-sm font-bold text-slate-800">{label}</div>{description&&<div className="mt-1 text-xs text-slate-400">{description}</div>}</div><span className={`relative h-6 w-11 rounded-full transition ${checked?"bg-sky-500":"bg-slate-300"}`}><span className={`absolute top-1 h-4 w-4 rounded-full bg-white transition ${checked?"left-6":"left-1"}`}/></span></button>;
+}
